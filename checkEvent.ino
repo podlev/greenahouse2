@@ -3,6 +3,8 @@ void checkEvent() {
   digitalWrite(rele1Pin, !rele1Status);
   rele2Check();
   digitalWrite(rele2Pin, !rele2Status);
+  rele4Check();
+  digitalWrite(rele4Pin, !rele4Status);
 }
 
 void rele1Check() {
@@ -14,7 +16,6 @@ void rele1Check() {
       }
       rele1Status = false;
     }
-
   }
   else {
     rele1Status = false;
@@ -30,10 +31,28 @@ void rele2Check() {
       }
       rele2Status = false;
     }
-
   }
   else {
     rele2Status = false;
+  }
+}
+
+void rele4Check() {
+  if (condition == '<') {
+    if (temperature < rele4Value) {
+      rele4Status = true;
+    }
+    else {
+      rele4Status = false;
+    }
+  }
+  if (condition == '>') {
+    if (temperature > rele4Value) {
+      rele4Status = true;
+    }
+    else {
+      rele4Status = false;
+    }
   }
 }
 

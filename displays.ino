@@ -4,13 +4,12 @@ void Displays() {
 
   //Начальный экран
   if (displayMode == 0) {
-    if (updateDisplay.isReady()) {
       lcd.setCursor(0, 0);
       lcd.print(time.gettime("H:i"));
-      lcd.print(" t:" + String(temperature) + " h:" + String(humidity));
+      lcd.print(" t:" + String(temperature));
+      lcd.print( " h:" + String(humidity));
       lcd.setCursor(0, 1);
-      lcd.print("r1:" + String(rele1Status) + " r2:" + String(rele2Status));
-    }
+      lcd.print("r: " + String(rele1Status) + " " + String(rele2Status) + " " + String(rele3Status) + " " + String(rele4Status));  
   }
 
   //Установка времени
@@ -58,29 +57,29 @@ void Displays() {
       releHStartTemp = constrain(map(pot, 100, 900, 0, 23), 0, 23);
       lcd.setCursor(0, 0);
       //Добавть формат
-      lcd.print(String(releHStartTemp) + ":" + String(rele1HStop) + " " + String(rele1Period) + " " + String(rele1Frequency)  + " " + String(rele1Duration));
+      lcd.print(String(toFormat(releHStartTemp)) + ":" + String(toFormat(rele1HStop)) + " " + String(rele1Period) + " " + String(rele1Frequency)  + " " + String(rele1Duration));
     }
     if (mode == 2) {
       releHStopTemp = constrain(map(pot, 100, 900, 0, 23), 0, 23);
       lcd.setCursor(0, 0);
-      lcd.print(String(releHStartTemp) + ":" + String(releHStopTemp) + " " + String(rele1Period) + " " + String(rele1Frequency)  + " " + String(rele1Duration));
+      lcd.print(String(toFormat(releHStartTemp)) + ":" + String(toFormat(releHStopTemp)) + " " + String(rele1Period) + " " + String(rele1Frequency)  + " " + String(rele1Duration));
     }
     if (mode == 3) {
       relePeriodTemp = constrain(map(pot, 100, 900, 0, 10), 0, 10);
       lcd.setCursor(0, 0);
-      lcd.print(String(releHStartTemp) + ":" + String(releHStopTemp) + " " + String(relePeriodTemp) + " " + String(rele1Frequency)  + " " + String(rele1Duration));
+      lcd.print(String(toFormat(releHStartTemp)) + ":" + String(toFormat(releHStopTemp)) + " " + String(relePeriodTemp) + " " + String(rele1Frequency)  + " " + String(rele1Duration));
 
     }
     if (mode == 4) {
       releFrequencyTemp = constrain(map(pot, 100, 900, 0, 60), 0, 60);
       lcd.setCursor(0, 0);
-      lcd.print(String(releHStartTemp) + ":" + String(releHStopTemp) + " " + String(relePeriodTemp) + " " + String(releFrequencyTemp)  + " " + String(rele1Duration));
+      lcd.print(String(toFormat(releHStartTemp)) + ":" + String(toFormat(releHStopTemp)) + " " + String(relePeriodTemp) + " " + String(releFrequencyTemp)  + " " + String(rele1Duration));
 
     }
     if (mode == 5) {
       releDurationTemp = constrain(map(pot, 100, 900, 0, 60), 0, 60);
       lcd.setCursor(0, 0);
-      lcd.print(String(releHStartTemp) + ":" + String(releHStopTemp) + " " + String(relePeriodTemp) + " " + String(releFrequencyTemp)  + " " + String(releDurationTemp));
+      lcd.print(String(toFormat(releHStartTemp)) + ":" + String(toFormat(releHStopTemp)) + " " + String(relePeriodTemp) + " " + String(releFrequencyTemp)  + " " + String(releDurationTemp));
     }
     if (mode == 6) {
       lcd.setCursor(0, 0);
@@ -160,6 +159,40 @@ void Displays() {
       mode = 0;
     }
   }
-  
+  //Установка 4 реле
+  if (displayMode == 4) {
+    if (mode == 0) {
+      lcd.setCursor(0, 0);
+      lcd.print("rele4 set");
+      lcd.setCursor(0, 1);
+      lcd.print("t" + String(condition) + String(rele4Value));
+    }
+    if (mode == 1) {
+      if (pot > 512) condition = '>';
+      else condition = '<';
+      lcd.setCursor(0, 0);
+      lcd.print("t" + String(condition) + String(rele4Value));
+    }
+    if (mode == 2) {
+      rele4Temp = constrain(map(pot, 100, 900, 0, 40), 0, 40);
+      lcd.setCursor(0, 0);
+      lcd.print("t" + String(condition) + String(rele4Temp));
+    }
+
+    if (mode == 3) {
+      lcd.setCursor(0, 0);
+      lcd.print("prs btn to sve");
+      lcd.setCursor(0, 1);
+      lcd.print("lng prs to cncl");
+    }
+    if (mode == 4) {
+      rele4Value = rele4Temp;
+      EEPROM.write(30, rele4Value);
+      EEPROM.write(31, condition);
+      displayMode++;
+      mode = 0;
+    }
+  }
+
 }
 

@@ -4,6 +4,8 @@
 #define btnPin 5
 #define rele1Pin 8
 #define rele2Pin 9
+#define rele3Pin 10
+#define rele4Pin 11
 #define CLKPin 2
 #define DATPin 3
 #define RSTPin 4
@@ -20,9 +22,8 @@
 iarduino_RTC time(RTC_DS1302, RSTPin, CLKPin, DATPin);
 LiquidCrystal_I2C lcd(I2CAdress, 16, 2);
 GButton button(btnPin);
-GTimer_ms updateLog(1000);
-GTimer_ms updateDisplay(1000);
-GTimer_ms DHTTimer(5000);
+GTimer_ms updateLog(60000);
+GTimer_ms DHTTimer(2000);
 
 DHT dht(12, DHT11);
 
@@ -47,6 +48,10 @@ uint8_t rele2Period = 1;
 uint8_t rele2Frequency = 60;
 uint8_t rele2Duration = 60;
 
+uint8_t rele4Value = 30;
+uint8_t rele4Temp = 30;
+char condition = '>';
+
 uint8_t releHStartTemp = 0;
 uint8_t releHStopTemp = 0;
 uint8_t relePeriodTemp = 0;
@@ -55,6 +60,9 @@ uint8_t releDurationTemp = 0;
 
 bool rele1Status = false;
 bool rele2Status = false;
+bool rele3Status = false;
+bool rele4Status = false;
+
 
 uint8_t mode = 0;
 uint8_t displayMode = 0;
@@ -72,7 +80,7 @@ void setup()
   Serial.begin(9600);
   time.begin();
   dht.begin();
-  //settingsLoad();
+  settingsLoad();
 }
 
 
@@ -95,5 +103,5 @@ void loop()
     mode = 0;
     lcd.clear();
     }
-  displayMode = displayMode % 4;
+  displayMode = displayMode % 5;
 }
