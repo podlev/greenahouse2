@@ -22,7 +22,7 @@
 iarduino_RTC time(RTC_DS1302, RSTPin, CLKPin, DATPin);
 LiquidCrystal_I2C lcd(I2CAdress, 16, 2);
 GButton button(btnPin);
-GTimer_ms updateLog(60000);
+GTimer_ms updateLog(1000);
 GTimer_ms DHTTimer(2000);
 
 DHT dht(12, DHT11);
@@ -48,9 +48,16 @@ uint8_t rele2Period = 1;
 uint8_t rele2Frequency = 60;
 uint8_t rele2Duration = 60;
 
+uint8_t rele3HStart = 6;
+uint8_t rele3HStop = 20;
+uint8_t rele3Period = 1;
+uint8_t rele3Frequency = 60;
+uint8_t rele3Duration = 5;
+
 uint8_t rele4Value = 30;
 uint8_t rele4Temp = 30;
-char condition = '>';
+char rele4Param = 't';
+char rele4Condition = '>';
 
 uint8_t releHStartTemp = 0;
 uint8_t releHStopTemp = 0;
@@ -74,6 +81,8 @@ void setup()
   //pinMode(btnPin, INPUT_PULLUP);
   pinMode(rele1Pin, OUTPUT);
   pinMode(rele2Pin, OUTPUT);
+  pinMode(rele3Pin, OUTPUT);
+  pinMode(rele4Pin, OUTPUT);
 
   lcd.init(); //Инициализация LCD
   lcd.backlight(); //Включение подстветки LCD
@@ -103,5 +112,5 @@ void loop()
     mode = 0;
     lcd.clear();
     }
-  displayMode = displayMode % 5;
+  displayMode = displayMode % 6;
 }

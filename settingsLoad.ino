@@ -11,7 +11,14 @@ void settingsLoad() {
  rele2Frequency = EEPROM.read(13);
  rele2Duration = EEPROM.read(14);
 
+ rele3HStart = EEPROM.read(20);
+ rele3HStop = EEPROM.read(21);
+ rele3Period = EEPROM.read(22);
+ rele3Frequency = EEPROM.read(23);
+ rele3Duration = EEPROM.read(24); 
+
  rele4Value = EEPROM.read(30);
- condition = EEPROM.read(31); 
+ rele4Condition = EEPROM.read(31);
+ rele4Param = EEPROM.read(32); 
 }
 

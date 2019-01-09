@@ -6,8 +6,8 @@ void Displays() {
   if (displayMode == 0) {
       lcd.setCursor(0, 0);
       lcd.print(time.gettime("H:i"));
-      lcd.print(" t:" + String(temperature));
-      lcd.print( " h:" + String(humidity));
+      lcd.print(" t:" + String(toFormat(temperature)));
+      lcd.print( " h:" + String(toFormat(humidity)));
       lcd.setCursor(0, 1);
       lcd.print("r: " + String(rele1Status) + " " + String(rele2Status) + " " + String(rele3Status) + " " + String(rele4Status));  
   }
@@ -159,36 +159,102 @@ void Displays() {
       mode = 0;
     }
   }
-  //Установка 4 реле
+
+  //Установка 3 реле
   if (displayMode == 4) {
     if (mode == 0) {
       lcd.setCursor(0, 0);
-      lcd.print("rele4 set");
+      lcd.print("rele3 set");
       lcd.setCursor(0, 1);
-      lcd.print("t" + String(condition) + String(rele4Value));
+      lcd.print(String(toFormat(rele3HStart)) + ":" + String(toFormat(rele3HStop)) + " " + String(rele3Period) + " " + String(rele3Frequency)  + " " + String(rele3Duration));
     }
     if (mode == 1) {
-      if (pot > 512) condition = '>';
-      else condition = '<';
+      releHStartTemp = constrain(map(pot, 100, 900, 0, 23), 0, 23);
       lcd.setCursor(0, 0);
-      lcd.print("t" + String(condition) + String(rele4Value));
+      //Добавть формат
+      lcd.print(String(releHStartTemp) + ":" + String(rele3HStop) + " " + String(rele3Period) + " " + String(rele3Frequency)  + " " + String(rele3Duration));
     }
     if (mode == 2) {
-      rele4Temp = constrain(map(pot, 100, 900, 0, 40), 0, 40);
+      releHStopTemp = constrain(map(pot, 100, 900, 0, 23), 0, 23);
       lcd.setCursor(0, 0);
-      lcd.print("t" + String(condition) + String(rele4Temp));
+      lcd.print(String(releHStartTemp) + ":" + String(releHStopTemp) + " " + String(rele3Period) + " " + String(rele3Frequency)  + " " + String(rele3Duration));
     }
-
     if (mode == 3) {
+      relePeriodTemp = constrain(map(pot, 100, 900, 0, 10), 0, 10);
+      lcd.setCursor(0, 0);
+      lcd.print(String(releHStartTemp) + ":" + String(releHStopTemp) + " " + String(relePeriodTemp) + " " + String(rele3Frequency)  + " " + String(rele3Duration));
+
+    }
+    if (mode == 4) {
+      releFrequencyTemp = constrain(map(pot, 100, 900, 0, 60), 0, 60);
+      lcd.setCursor(0, 0);
+      lcd.print(String(releHStartTemp) + ":" + String(releHStopTemp) + " " + String(relePeriodTemp) + " " + String(releFrequencyTemp)  + " " + String(rele3Duration));
+
+    }
+    if (mode == 5) {
+      releDurationTemp = constrain(map(pot, 100, 900, 0, 60), 0, 60);
+      lcd.setCursor(0, 0);
+      lcd.print(String(releHStartTemp) + ":" + String(releHStopTemp) + " " + String(relePeriodTemp) + " " + String(releFrequencyTemp)  + " " + String(releDurationTemp));
+    }
+    if (mode == 6) {
       lcd.setCursor(0, 0);
       lcd.print("prs btn to sve");
       lcd.setCursor(0, 1);
       lcd.print("lng prs to cncl");
     }
+    if (mode == 7) {
+      rele3HStart = releHStartTemp;
+      rele3HStop = releHStopTemp;
+      rele3Period = relePeriodTemp;
+      rele3Frequency = releFrequencyTemp;
+      rele3Duration = releDurationTemp;
+      EEPROM.write(20, rele3HStart);
+      EEPROM.write(21, rele3HStop);
+      EEPROM.write(22, rele3Period);
+      EEPROM.write(23, rele3Frequency);
+      EEPROM.write(24, rele3Duration);
+      displayMode++;
+      mode = 0;
+    }
+  }
+  
+  //Установка 4 реле
+  if (displayMode == 5) {
+    if (mode == 0) {
+      lcd.setCursor(0, 0);
+      lcd.print("rele4 set");
+      lcd.setCursor(0, 1);
+      lcd.print(String(rele4Param) + String(rele4Condition) + String(rele4Value));
+    }
+    if (mode == 1) {
+      if (pot > 512) rele4Param = 't';
+      else rele4Param = 'h';
+      lcd.setCursor(0, 0);
+      lcd.print(String(rele4Param) + String(rele4Condition) + String(rele4Value));
+    }
+    if (mode == 2) {
+      if (pot > 512) rele4Condition = '>';
+      else rele4Condition = '<';
+      lcd.setCursor(0, 0);
+      lcd.print(String(rele4Param) + String(rele4Condition) + String(rele4Value));
+    }
+    if (mode == 3) {
+      rele4Temp = constrain(map(pot, 100, 900, 0, 40), 0, 40);
+      lcd.setCursor(0, 0);
+      lcd.print(String(rele4Param) + String(rele4Condition) + String(rele4Temp));
+    }
+
     if (mode == 4) {
+      lcd.setCursor(0, 0);
+      lcd.print("prs btn to sve");
+      lcd.setCursor(0, 1);
+      lcd.print("lng prs to cncl");
+    }
+    if (mode == 5) {
       rele4Value = rele4Temp;
       EEPROM.write(30, rele4Value);
-      EEPROM.write(31, condition);
+      EEPROM.write(31, rele4Condition);
+      EEPROM.write(32, rele4Param);
       displayMode++;
       mode = 0;
     }
